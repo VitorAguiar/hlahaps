@@ -1,0 +1,17 @@
+Package: hlahaps
+Title: Retrieve HLA haplotype information from NMDP data.
+Version: 0.0.0.9000
+Authors@R: person("Vitor", "Aguiar", email = "vitor@ib.usp.br", role = c("aut", "cre"))
+Description: Given a table of individuals and their haplotypes, retrive the
+    haplotype informations from NMDP.
+Depends:
+    R (>= 3.2.3)
+Imports:
+    curl,
+    dplyr,
+    purrr,
+    tidyr
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
