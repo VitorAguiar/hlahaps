@@ -19,7 +19,7 @@ hla_groups <-
   }
 
 nmdp <- 
-  data.table::fread("~/kelly/HLA_freq_NMDP_ABCDR.txt") %>% 
+  data.table::fread("~/kelly/HLA_freq_NMDP_ABCDR.txt", dec = ",") #%>% 
   dplyr::select(A, B, C, DRB1, AAFA_freq:VIET_rank) %>%
   dplyr::tbl_df()
 
