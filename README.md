@@ -3,9 +3,9 @@ data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded. We will
 use the individual HG00096 to illustrate how the `get_hla_haps()`
 function works:
 
-    library(hlahaps)
+    > library(hlahaps)
 
-    pag
+    > pag
 
     Source: local data frame [1,910 x 5]
 
@@ -23,8 +23,8 @@ function works:
     10 HG00101 A*11:01g  C*06:02  B*57:01 DRB1*15:01
     ..     ...      ...      ...      ...        ...
 
-    test_ind <- subset(pag, subject == "HG00096")
-    test_ind
+    > test_ind <- subset(pag, subject == "HG00096")
+    > test_ind
 
     Source: local data frame [2 x 5]
 
@@ -33,7 +33,7 @@ function works:
     1 HG00096 A*01:01g C*07:01g B*08:01g DRB1*03:01
     2 HG00096  A*29:02  C*16:01  B*44:03 DRB1*07:01
 
-    get_hla_haps(test_ind)
+    > get_hla_haps(test_ind)
 
     $`original haplotypes:`
     Source: local data frame [2 x 5]
@@ -90,7 +90,7 @@ It is possible to apply `get_hla_haps()` to the whole data, e.g. by
 using `plyr::dlply()` with a parallel backend provided by
 `doMC::registerDoMC()`:
 
-    n_cores <- 50
-    doMC::registerDoMC(n_cores)
-
-    results_list <- plyr::dlply(pag, ~subject, . %>% get_hla_haps, .parallel = TRUE)
+    > n_cores <- 50
+    > doMC::registerDoMC(n_cores)
+    > 
+    > results_list <- plyr::dlply(pag, ~subject, . %>% get_hla_haps, .parallel = TRUE)

@@ -6,7 +6,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(message=FALSE, comment='')
+knitr::opts_chunk$set(message=FALSE, comment='', prompt = TRUE)
 ```
 
 When we attach the package, the [Gourraud et al. (2014) data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded. We will use the individual HG00096 to illustrate how the `get_hla_haps()` function works:
