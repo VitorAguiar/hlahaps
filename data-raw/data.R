@@ -19,8 +19,20 @@ hla_groups <-
   }
 
 nmdp <- 
-  data.table::fread("~/kelly/HLA_freq_NMDP_ABCDR.txt", dec = ",") #%>% 
-  dplyr::select(A, B, C, DRB1, AAFA_freq:VIET_rank) %>%
-  dplyr::tbl_df()
+  data.table::fread("~/kelly/HLA_freq_NMDP_ABCDR.txt", sep = "\t", 
+                    select = c("A", "B", "C", "DRB1", "AFA_freq", "AFA_rank", 
+                               "API_freq", "API_rank", "CAU_freq", "CAU_rank", 
+                               "HIS_freq", "HIS_rank", "NAM_freq", "NAM_rank")) 
 
-devtools::use_data(hla_groups, nmdp, internal = FALSE, overwrite = TRUE)
+pag <- 
+  data.table::fread("~/kelly/PAG_haplotypes_groups_2dig.txt", sep = "\t") %>%
+  data.table::setnames("V1", "subject") %>%
+  {
+    dplyr::bind_rows(dplyr::select(., subject, A.1:DRB1.1) %>%
+                       `names<-`(gsub("\\.\\d$", "", names(.))),
+                     dplyr::select(., subject, A.2:DRB1.2) %>%
+                       `names<-`(gsub("\\.\\d$", "", names(.)))) %>%
+      dplyr::arrange(subject)
+  }
+
+devtools::use_data(hla_groups, nmdp, pag, internal = FALSE, overwrite = TRUE)

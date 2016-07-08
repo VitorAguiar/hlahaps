@@ -35,10 +35,6 @@ hla_filter_hap <- function(hap) {
     nmdp_match <- 
     dplyr::mutate_each(hap, dplyr::funs(allele_to_group), A:DRB1) %>%
     dplyr::inner_join(nmdp, by = no_na)
-  
-  nmdp_match %>%
-    .[!grepl("\\.x$", names(.))] %>%
-    `names<-`(gsub("\\.y", "", names(.))) %>%
-    dplyr::select(subject, A, B, C, DRB1, AFA_freq, AFA_rank, API_freq, API_rank, 
-                  CAU_freq, CAU_rank, HIS_freq, HIS_rank, NAM_freq, NAM_rank)
+
+  nmdp_match
 }
