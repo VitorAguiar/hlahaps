@@ -13,6 +13,8 @@ function `library()`.
 
     > library(hlahaps)
 
+#### usage
+
 When we attach the package, the [Gourraud et al. (2014)
 data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded.
 
