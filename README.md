@@ -1,7 +1,5 @@
 When we attach the package, the [Gourraud et al. (2014)
-data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded. We will
-use the individual HG00096 to illustrate how the `get_hla_haps()`
-function works:
+data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded.
 
     > library(hlahaps)
 
@@ -23,6 +21,9 @@ function works:
     10 HG00101 A*11:01g  C*06:02  B*57:01 DRB1*15:01
     ..     ...      ...      ...      ...        ...
 
+We will use the individual HG00096 to illustrate how the
+`get_hla_haps()` function works:
+
     > test_ind <- subset(pag, subject == "HG00096")
     > test_ind
 
@@ -32,6 +33,8 @@ function works:
         <chr>    <chr>    <chr>    <chr>      <chr>
     1 HG00096 A*01:01g C*07:01g B*08:01g DRB1*03:01
     2 HG00096  A*29:02  C*16:01  B*44:03 DRB1*07:01
+
+Applying `get_hla_haps`:
 
     > get_hla_haps(test_ind)
 
