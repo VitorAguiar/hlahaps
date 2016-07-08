@@ -24,16 +24,15 @@ hla_filter_hap <- function(hap) {
     do.call(function(...) expand.grid(..., stringsAsFactors = FALSE), .)
   
   no_na <-
-    hap %>% 
-    dplyr::select(-subject) %>%
-    .[sapply(., function(x) !all(is.na(x)))] %>%
+    sapply(hap, function(x) !all(is.na(x))) %>%
+    which() %>% 
     names()
   
-  nmdp_match <- dplyr::inner_join(hap, nmdp, by = no_na)
+  nmdp_match <- dplyr::inner_join(hap[no_na], nmdp, by = no_na)
   
   if (nrow(nmdp_match) == 0)
     nmdp_match <- 
-    dplyr::mutate_each(hap, dplyr::funs(allele_to_group), A:DRB1) %>%
+    dplyr::mutate_each_(hap[no_na], dplyr::funs(allele_to_group), no_na) %>%
     dplyr::inner_join(nmdp, by = no_na)
 
   nmdp_match

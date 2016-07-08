@@ -22,7 +22,8 @@ nmdp <-
   data.table::fread("~/kelly/HLA_freq_NMDP_ABCDR.txt", sep = "\t", 
                     select = c("A", "B", "C", "DRB1", "AFA_freq", "AFA_rank", 
                                "API_freq", "API_rank", "CAU_freq", "CAU_rank", 
-                               "HIS_freq", "HIS_rank", "NAM_freq", "NAM_rank")) 
+                               "HIS_freq", "HIS_rank", "NAM_freq", "NAM_rank")) %>%
+  as.data.frame()
 
 pag <- 
   data.table::fread("~/kelly/PAG_haplotypes_groups_2dig.txt", sep = "\t") %>%
@@ -33,6 +34,7 @@ pag <-
                      dplyr::select(., subject, A.2:DRB1.2) %>%
                        `names<-`(gsub("\\.\\d$", "", names(.)))) %>%
       dplyr::arrange(subject)
-  }
+  } %>% 
+  as.data.frame()
 
 devtools::use_data(hla_groups, nmdp, pag, internal = FALSE, overwrite = TRUE)

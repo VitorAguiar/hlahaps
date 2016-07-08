@@ -10,6 +10,8 @@
 #'  
 get_hla_haps <- function(ind) {
   
+  ind <- dplyr::select(ind, -subject)
+  
   hap_found <-
     ind %>% 
     split(1:nrow(.)) %>%
@@ -19,14 +21,25 @@ get_hla_haps <- function(ind) {
     hap_found %>%
     sapply(function(x) nrow(x) == 0)
   
-  hap_found_df <- dplyr::bind_rows(hap_found[!hap_not_found])
+  hap_found_df <- dplyr::bind_rows(hap_found[!hap_not_found]) 
+  
+  if (nrow(hap_found_df) > 0) 
+    hap_found_df <- dplyr::select(hap_found_df, A, C, B, DRB1, everything())
+  
+  no_na <-
+    sapply(ind, function(x) !all(is.na(x))) %>%
+    which() %>% 
+    names()
     
   all_possible <-
-    tidyr::expand(ind, subject, A, B, C, DRB1) %>% 
+    tidyr::expand_(ind, no_na) %>% 
     split(1:nrow(.)) %>%
-    lapply(. %>% hla_filter_hap() %>% dplyr::select(A:DRB1)) %>%
+    lapply(. %>% hla_filter_hap()) %>%
     .[sapply(., function(i) nrow(i) > 0)] %>%
-    dplyr::bind_rows()
+    dplyr::bind_rows() 
+  
+  if (nrow(all_possible) > 0) 
+    all_possible <- dplyr::select(all_possible, A, C, B, DRB1)
   
   out_list <- 
     list(`original haplotypes:` = ind,
