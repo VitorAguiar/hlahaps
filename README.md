@@ -1,7 +1,20 @@
-When we attach the package, the [Gourraud et al. (2014)
-data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded.
+#### install
+
+First, we need to install `devtools`, if not already installed.
+
+    > install.packages("devtools")
+
+Then, we install `hlahaps` using the `install_github()` function.
+
+    > devtools::install_github("VitorAguiar/hlahaps")
+
+Now, we can attach `hlahaps` as any other R package using the base
+function `library()`.
 
     > library(hlahaps)
+
+When we attach the package, the [Gourraud et al. (2014)
+data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded.
 
     > pag
 
