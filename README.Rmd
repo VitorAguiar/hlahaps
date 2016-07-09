@@ -37,7 +37,8 @@ devtools::load_all("~/hlahaps")
 When we attach the package, the [Gourraud et al. (2014) data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded. 
 
 ```{r}
-pag
+# showing data as dplyr's tibble diff for better visualization
+pag %>% dplyr::tbl_df()
 ```
 
 We will use the individual HG00096 to illustrate how the `get_hla_haps()` function works:
