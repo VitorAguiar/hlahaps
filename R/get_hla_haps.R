@@ -24,7 +24,8 @@ get_hla_haps <- function(ind) {
   hap_found_df <- dplyr::bind_rows(hap_found[!hap_not_found]) 
   
   if (nrow(hap_found_df) > 0) 
-    hap_found_df <- dplyr::select(hap_found_df, A, C, B, DRB1, everything())
+    hap_found_df <- 
+    dplyr::select(hap_found_df, A, C, B, DRB1, dplyr::everything())
   
   no_na <-
     sapply(ind, function(x) !all(is.na(x))) %>%
