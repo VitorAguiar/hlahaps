@@ -48,7 +48,5 @@ get_hla_haps <- function(ind) {
          `haplotypes not found at NMDP table:` = ind[hap_not_found, ],
          `possible haplotypes in NMDP table:` = all_possible)
   
-  out_list[sapply(out_list, function(x) nrow(x) == 0)] <- NA
-  
   out_list
 }
