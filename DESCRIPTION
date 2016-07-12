@@ -1,6 +1,6 @@
 Package: hlahaps
 Title: Retrieve HLA haplotype information from NMDP data.
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: c(
     person("Vitor", "Aguiar", email = "vitor@ib.usp.br", role = c("aut", "cre")),
     person("Kelly", "Nunes", email = "knunesbio@gmail.com", role = "aut"))

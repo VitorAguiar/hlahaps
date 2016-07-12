@@ -1,4 +1,4 @@
-library(magrittr)
+devtools::load_all("~/hlahaps")
 
 hla_groups <- 
   readxl::read_excel("~/kelly/mmc1.xls", col_names = FALSE) %>%
@@ -27,14 +27,6 @@ nmdp <-
 
 pag <- 
   data.table::fread("~/kelly/PAG_haplotypes_groups_2dig.txt", sep = "\t") %>%
-  data.table::setnames("V1", "subject") %>%
-  {
-    dplyr::bind_rows(dplyr::select(., subject, A.1:DRB1.1) %>%
-                       `names<-`(gsub("\\.\\d$", "", names(.))),
-                     dplyr::select(., subject, A.2:DRB1.2) %>%
-                       `names<-`(gsub("\\.\\d$", "", names(.)))) %>%
-      dplyr::arrange(subject)
-  } %>% 
-  as.data.frame()
+  format_haps_data()
 
 devtools::use_data(hla_groups, nmdp, pag, internal = FALSE, overwrite = TRUE)

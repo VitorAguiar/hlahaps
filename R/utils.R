@@ -15,6 +15,18 @@ allele_to_group <- function(alleles, groups = hla_groups)
   }) %>%
   unlist()
 
+format_haps_data <- function(dataset) 
+  dataset %>%
+  data.table::setnames(1, "subject") %>%
+  {
+    dplyr::bind_rows(dplyr::select(., subject, A.1:DRB1.1) %>%
+                       `names<-`(gsub("\\.\\d$", "", names(.))),
+                     dplyr::select(., subject, A.2:DRB1.2) %>%
+                       `names<-`(gsub("\\.\\d$", "", names(.)))) %>%
+      dplyr::arrange(subject)
+  } %>% 
+  as.data.frame()
+
 hla_filter_hap <- function(hap) {
   
   if (any(grepl("/", hap)))
