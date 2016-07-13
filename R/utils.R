@@ -30,22 +30,26 @@ format_haps_data <- function(dataset)
 hla_filter_hap <- function(hap) {
   
   if (any(grepl("/", hap)))
-    hap %<>%
-    unlist %>% 
-    strsplit("/") %>% 
-    do.call(function(...) expand.grid(..., stringsAsFactors = FALSE), .)
+    hap <- 
+      hap %>%
+      unlist() %>% 
+      strsplit("/") %>% 
+      do.call(function(...) expand.grid(..., stringsAsFactors = FALSE), .)
   
-  no_na <-
-    sapply(hap, function(x) !all(is.na(x))) %>%
-    which() %>% 
-    names()
+  hap <- hap[sapply(hap, function(x) !all(is.na(x)))]
   
-  nmdp_match <- dplyr::inner_join(hap[no_na], nmdp, by = no_na)
+  nmdp_match <- dplyr::inner_join(hap, nmdp, by = names(hap))
   
-  if (nrow(nmdp_match) == 0)
-    nmdp_match <- 
-    dplyr::mutate_each_(hap[no_na], dplyr::funs(allele_to_group), no_na) %>%
-    dplyr::inner_join(nmdp, by = no_na)
+  if (nrow(nmdp_match) == 0) {
+    hap_g <- 
+      hap %>% 
+      dplyr::mutate_each(dplyr::funs(. %>% allele_to_group())) %>%
+      dplyr::bind_rows(hap) %>%
+      tidyr::expand_(names(hap))
+    
+    nmdp_match <- dplyr::inner_join(hap_g, nmdp, by = names(hap_g))
+  }
 
-  nmdp_match
+  nmdp_match %>%
+    dplyr::select(A, C, B, DRB1, dplyr::everything())
 }
