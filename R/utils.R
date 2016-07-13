@@ -17,7 +17,7 @@ allele_to_group <- function(alleles, groups = hla_groups)
 
 format_haps_data <- function(dataset) 
   dataset %>%
-  data.table::setnames(1, "subject") %>%
+  {names(.)[1] <- "subject"; .} %>%
   {
     dplyr::bind_rows(dplyr::select(., subject, A.1:DRB1.1) %>%
                        `names<-`(gsub("\\.\\d$", "", names(.))),
