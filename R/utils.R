@@ -24,8 +24,7 @@ format_haps_data <- function(dataset)
                      dplyr::select(., subject, A.2:DRB1.2) %>%
                        `names<-`(gsub("\\.\\d$", "", names(.)))) %>%
       dplyr::arrange(subject)
-  } %>% 
-  as.data.frame()
+  }
 
 hla_filter_hap <- function(hap) {
   
