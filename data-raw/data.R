@@ -2,7 +2,7 @@ devtools::load_all("~/hlahaps")
 
 hla_groups_df <- 
   readxl::read_excel("~/kelly/mmc1.xls", col_names = FALSE) %>%
-  split(cumsum(grepl("-- [^ ] --", .[[1]]))) %>%
+  split(cumsum(stringr::str_detect(.[[1]], "-- [^ ] --"))) %>%
   lapply(. %>% `names<-`(c("group", "allele"))) %>%
   dplyr::bind_rows() %>% 
   tidyr::drop_na() %>%

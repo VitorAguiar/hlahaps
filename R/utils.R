@@ -4,11 +4,11 @@ allele_to_group <- function(alleles, groups = hla_groups)
   {
     x <- 
       gsub("\\*", "\\\\*", .) %>% 
-      paste0("^(", ., ")(:|$|[NQLS])") %>%
-      grep(., names(groups))
+      stringr::str_c("^(", ., ")(:|$|[NQLS])") %>%
+      stringr::str_detect(names(groups), .)
     
     if (length(x)) {
-      groups[x] %>% unique() %>% paste(collapse = "/")
+      groups[x] %>% unique() %>% stringr::str_c(collapse = "/")
     } else {
       .
     }
@@ -28,7 +28,7 @@ format_haps_data <- function(dataset)
 
 hla_filter_hap <- function(hap) {
   
-  if (any(grepl("/", hap)))
+  if (any(stringr::str_detect(hap, "/")))
     hap <- 
       hap %>%
       unlist() %>% 
