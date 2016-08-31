@@ -37,24 +37,23 @@ devtools::load_all("~/hlahaps")
 When we attach the package, the [Gourraud et al. (2014) data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded. 
 
 ```{r}
-# showing data as dplyr's tibble diff for better visualization
-pag %>% dplyr::tbl_df()
+pag
 ```
 
 We will use the individual HG00096 to illustrate how the `get_hla_haps()` function works:
 
 ```{r}
-test_ind <- subset(pag, subject == "HG00096")
+test_ind <- dplyr::filter(pag, subject == "HG00096")
 test_ind
 ```
 
-Applying `get_hla_haps`:
+Applying `get_hla_haps()`:
 
 ```{r}
 get_hla_haps(test_ind)
 ```
 
-`get_hla_haps` returns a list with 4 elements:
+`get_hla_haps()` returns a list with 4 elements:
 
 1. A data.frame with the original haplotypes
 2. A data.frame with the haplotypes found at the `nmdp` table
@@ -63,19 +62,20 @@ get_hla_haps(test_ind)
 
 It is possible to apply `get_hla_haps()` to the whole data, e.g. by using `plyr::dlply()` with a parallel backend provided by `doMC::registerDoMC()`:
 
-```{r cache=TRUE}
+```{r}
 n_cores <- 50
 doMC::registerDoMC(n_cores)
 
 results_list <- plyr::dlply(pag, ~subject, . %>% get_hla_haps, .parallel = TRUE)
 ```
 
-With a little hack using `purrr::transpose` and `plyr::ldply` it is possible to compile a data.frame with info for all individuals. For example, let's create a data.frame with all the haplotypes found in the NMDP table:
+With a little hack using `purrr::transpose()` and `plyr::ldply()` it is possible to compile a data.frame with info for all individuals. For example, let's create a data.frame with all the haplotypes found in the NMDP table:
 
 ```{r}
 haps_found <-
   purrr::transpose(results_list)$`haplotypes found at NMDP table:` %>%
-  plyr::ldply(rbind, .id = "subject")
+  plyr::ldply(rbind, .id = "subject") %>%
+  tibble::as_tibble()
 
-haps_found %>% dplyr::tbl_df()
+haps_found
 ```
