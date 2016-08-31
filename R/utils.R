@@ -21,10 +21,10 @@ format_haps_data <- function(dataset)
     {
       dplyr::bind_rows(dplyr::select(., subject, A.1:DRB1.1) %>%
                        `names<-`(gsub("\\.\\d$", "", names(.))),
-                     dplyr::select(., subject, A.2:DRB1.2) %>%
-                       `names<-`(gsub("\\.\\d$", "", names(.)))) %>%
+		       dplyr::select(., subject, A.2:DRB1.2) %>%
+		       `names<-`(gsub("\\.\\d$", "", names(.)))) %>%
       dplyr::arrange(subject)
-  }
+    }
 
 hla_filter_hap <- function(hap) {
   

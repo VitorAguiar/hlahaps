@@ -14,8 +14,8 @@ get_hla_haps <- function(ind) {
   
   hap_found <-
     ind %>% 
-    split(1:nrow(.)) %>%
-    lapply(. %>% hla_filter_hap) 
+    split(seq_len(nrow(.))) %>%
+    lapply(. %>% hla_filter_hap()) 
   
   hap_not_found <- ind[sapply(hap_found, function(x) nrow(x) == 0), ]
   
@@ -25,7 +25,7 @@ get_hla_haps <- function(ind) {
   
   all_possible <-
     tidyr::expand_(ind, names(ind)) %>% 
-    split(1:nrow(.)) %>%
+    split(seq_len(nrow(.))) %>%
     lapply(. %>% hla_filter_hap()) %>%
     dplyr::bind_rows() %>%
     dplyr::select(A, C, B, DRB1)
