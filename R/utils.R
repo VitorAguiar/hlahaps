@@ -1,19 +1,20 @@
-allele_to_group <- function(alleles, groups = hla_groups) 
-  alleles %>% 
-  lapply(. %>% 
-  {
-    x <- 
-      stringr::str_replace(., "\\*", "\\\\*") %>% 
+allele_to_group <- function(alleles, groups = hla_groups) {
+    
+  f <- Vectorize(function(allele) {
+    x <-
+      stringr::str_replace(allele, "\\*", "\\\\*") %>% 
       stringr::str_c("^(", ., ")(:|$|[NQLS])") %>%
       stringr::str_detect(names(groups), .)
     
-    if (length(x)) {
+    if (any(x)) {
       groups[x] %>% unique() %>% stringr::str_c(collapse = "/")
     } else {
-      .
+      allele
     }
-  }) %>%
-  unlist()
+  }, vectorize.args = "allele")
+
+  ifelse(stringr::str_detect(alleles, "g$"), alleles, f(alleles))
+}
 
 format_haps_data <- function(dataset) 
   dataset %>%
