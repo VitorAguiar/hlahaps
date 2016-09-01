@@ -32,7 +32,7 @@ hla_filter_hap <- function(hap) {
     hap <- 
       hap %>%
       unlist() %>% 
-      strsplit("/") %>% 
+      stringr::str_split("/") %>% 
       do.call(function(...) expand.grid(..., stringsAsFactors = FALSE), .)
   
   hap <- hap[sapply(hap, function(x) !all(is.na(x)))]
