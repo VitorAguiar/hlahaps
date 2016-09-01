@@ -3,7 +3,7 @@ allele_to_group <- function(alleles, groups = hla_groups)
   lapply(. %>% 
   {
     x <- 
-      gsub("\\*", "\\\\*", .) %>% 
+      stringr::str_replace(., "\\*", "\\\\*") %>% 
       stringr::str_c("^(", ., ")(:|$|[NQLS])") %>%
       stringr::str_detect(names(groups), .)
     
@@ -20,9 +20,9 @@ format_haps_data <- function(dataset)
     dplyr::rename(subject = X1) %>%
     {
       dplyr::bind_rows(dplyr::select(., subject, A.1:DRB1.1) %>%
-                       `names<-`(gsub("\\.\\d$", "", names(.))),
+                       `names<-`(stringr::str_replace(names(.), "\\.\\d$", "")),
 		       dplyr::select(., subject, A.2:DRB1.2) %>%
-		       `names<-`(gsub("\\.\\d$", "", names(.)))) %>%
+                       `names<-`(stringr::str_replace(names(.), "\\.\\d$", ""))) %>%
       dplyr::arrange(subject)
     }
 
