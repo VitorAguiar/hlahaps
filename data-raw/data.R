@@ -18,7 +18,7 @@ nmdp <-
   readr::read_tsv("~/kelly/HLA_freq_NMDP_ABCDR.txt") %>%
   dplyr::select(A, B, C, DRB1, AFA_freq, AFA_rank, API_freq, API_rank, CAU_freq,
 		CAU_rank, HIS_freq, HIS_rank, NAM_freq, NAM_rank) %>%
-  dplyr::mutate_at(dplyr::ends_with("freq"), format_freq)
+  dplyr::mutate_at(dplyr::vars(dplyr::ends_with("freq")), format_freq)
 
 pag <- 
   readr::read_tsv("~/kelly/PAG_haplotypes_groups_2dig.txt") %>%
