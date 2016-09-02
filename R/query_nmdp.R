@@ -8,14 +8,14 @@
 #' given all combinations of the individual's alleles.
 #' @export
 #'  
-get_hla_haps <- function(ind) {
+query_nmdp <- function(ind) {
   
   ind <- dplyr::select(ind, -subject)
   
   hap_found <-
     ind %>% 
     split(seq_len(nrow(.))) %>%
-    lapply(. %>% hla_filter_hap()) 
+    lapply(. %>% filter_hap()) 
   
   hap_not_found <- ind[sapply(hap_found, function(x) nrow(x) == 0), ]
   
@@ -26,15 +26,12 @@ get_hla_haps <- function(ind) {
   all_possible <-
     tidyr::expand_(ind, names(ind)) %>% 
     split(seq_len(nrow(.))) %>%
-    lapply(. %>% hla_filter_hap()) %>%
+    lapply(. %>% filter_hap()) %>%
     dplyr::bind_rows() %>%
     dplyr::select(A, C, B, DRB1)
   
-  out_list <- 
-    list(`original haplotypes:` = ind,
-         `haplotypes found at NMDP table:` = hap_found_df,
-         `haplotypes not found at NMDP table:` = hap_not_found,
-         `possible haplotypes in NMDP table:` = all_possible)
-  
-  out_list
+  list(`original haplotypes` = ind,
+       `haplotypes found` = hap_found_df,
+       `haplotypes not found` = hap_not_found,
+       `possible haplotypes` = all_possible)
 }

@@ -27,7 +27,7 @@ format_haps_data <- function(dataset)
       dplyr::arrange(subject)
     }
 
-hla_filter_hap <- function(hap) {
+filter_hap <- function(hap) {
   
   if (any(stringr::str_detect(hap, "/")))
     hap <- 
