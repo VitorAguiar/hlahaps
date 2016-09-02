@@ -13,7 +13,8 @@ allele_to_group <- function(alleles, groups = hla_groups) {
     }
   }, vectorize.args = "allele")
 
-  ifelse(stringr::str_detect(alleles, "g$"), alleles, f(alleles))
+  ifelse(stringr::str_detect(alleles, "g$") | is.na(alleles), 
+         alleles, f(alleles))
 }
 
 format_haps_data <- function(dataset) 
@@ -29,21 +30,21 @@ format_haps_data <- function(dataset)
 
 filter_hap <- function(hap) {
   
+  hap <- hap[sapply(hap, function(x) !all(is.na(x)))]
+  
   if (any(stringr::str_detect(hap, "/")))
     hap <- 
       hap %>%
       unlist() %>% 
-      stringr::str_split("/") %>% 
+      strsplit("/") %>% 
       do.call(function(...) expand.grid(..., stringsAsFactors = FALSE), .)
-  
-  hap <- hap[sapply(hap, function(x) !all(is.na(x)))]
   
   nmdp_match <- dplyr::inner_join(hap, nmdp, by = names(hap))
   
   if (nrow(nmdp_match) == 0) {
     hap_g <- 
       hap %>% 
-      dplyr::mutate_each(dplyr::funs(. %>% allele_to_group())) %>%
+      dplyr::mutate_all(allele_to_group) %>%
       dplyr::bind_rows(hap) %>%
       tidyr::expand_(names(hap))
     
