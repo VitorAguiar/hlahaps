@@ -1,4 +1,4 @@
-#### install
+#### Install
 
 First, we need to install `devtools`, if not already installed.
 
@@ -8,14 +8,14 @@ Then, we install `hlahaps` using the `install_github()` function.
 
     > devtools::install_github("VitorAguiar/hlahaps")
 
-Now, we can attach `hlahaps` as any other R package using the base
+Now, we can load `hlahaps` as any other R package using the base
 function `library()`.
 
     > library(hlahaps)
 
-#### usage
+#### Usage
 
-When we attach the package, the [Gourraud et al. (2014)
+When we load the package, the [Gourraud et al. (2014)
 data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded.
 
     > pag
@@ -35,8 +35,8 @@ data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded.
     10 HG00101 A*11:01g  C*06:02  B*57:01 DRB1*15:01
     # ... with 1,900 more rows
 
-We will use the individual HG00096 to illustrate how the
-`get_hla_haps()` function works:
+We will use the individual HG00096 to demonstrate how the `query_nmdp()`
+function works:
 
     > test_ind <- dplyr::filter(pag, subject == "HG00096")
     > test_ind
@@ -47,18 +47,18 @@ We will use the individual HG00096 to illustrate how the
     1 HG00096 A*01:01g C*07:01g B*08:01g DRB1*03:01
     2 HG00096  A*29:02  C*16:01  B*44:03 DRB1*07:01
 
-Applying `get_hla_haps()`:
+Applying `query_nmdp()`:
 
-    > get_hla_haps(test_ind)
+    > query_nmdp(test_ind)
 
-    $`original haplotypes:`
+    $`original haplotypes`
     # A tibble: 2 × 4
              A        C        B       DRB1
          <chr>    <chr>    <chr>      <chr>
     1 A*01:01g C*07:01g B*08:01g DRB1*03:01
     2  A*29:02  C*16:01  B*44:03 DRB1*07:01
 
-    $`haplotypes found at NMDP table:`
+    $`haplotypes found`
     # A tibble: 2 × 14
              A        C        B       DRB1    AFA_freq AFA_rank     API_freq
          <chr>    <chr>    <chr>      <chr>       <dbl>    <int>        <dbl>
@@ -68,11 +68,11 @@ Applying `get_hla_haps()`:
     #   CAU_rank <int>, HIS_freq <dbl>, HIS_rank <int>, NAM_freq <dbl>,
     #   NAM_rank <int>
 
-    $`haplotypes not found at NMDP table:`
+    $`haplotypes not found`
     # A tibble: 0 × 4
     # ... with 4 variables: A <chr>, C <chr>, B <chr>, DRB1 <chr>
 
-    $`possible haplotypes in NMDP table:`
+    $`possible haplotypes`
     # A tibble: 14 × 4
               A        C        B       DRB1
           <chr>    <chr>    <chr>      <chr>
@@ -91,7 +91,7 @@ Applying `get_hla_haps()`:
     13 A*29:02g  C*16:01  B*44:03 DRB1*03:01
     14 A*29:02g  C*16:01  B*44:03 DRB1*07:01
 
-`get_hla_haps()` returns a list with 4 elements:
+`query_nmdp()` returns a list with 4 elements:
 
 1.  A data.frame with the original haplotypes
 2.  A data.frame with the haplotypes found at the `nmdp` table
@@ -100,14 +100,14 @@ Applying `get_hla_haps()`:
 4.  A data.frame with possible haplotypes at `nmdp` table given the
     individual's alleles
 
-It is possible to apply `get_hla_haps()` to the whole data, e.g. by
-using `plyr::dlply()` with a parallel backend provided by
+It is possible to apply `query_nmdp()` to the whole data, e.g. by using
+`plyr::dlply()` with a parallel backend provided by
 `doMC::registerDoMC()`:
 
-    > n_cores <- 50
-    > doMC::registerDoMC(n_cores)
+    > # using 36 cores:
+    > doMC::registerDoMC(36)
     > 
-    > results_list <- plyr::dlply(pag, ~subject, . %>% get_hla_haps, .parallel = TRUE)
+    > results_list <- plyr::dlply(pag, ~subject, . %>% query_nmdp(), .parallel = TRUE)
 
 With a little hack using `purrr::transpose()` and `plyr::ldply()` it is
 possible to compile a data.frame with info for all individuals. For
@@ -115,7 +115,7 @@ example, let's create a data.frame with all the haplotypes found in the
 NMDP table:
 
     > haps_found <-
-    +   purrr::transpose(results_list)$`haplotypes found at NMDP table:` %>%
+    +   purrr::transpose(results_list)$`haplotypes found` %>%
     +   plyr::ldply(rbind, .id = "subject") %>%
     +   tibble::as_tibble()
     > 
