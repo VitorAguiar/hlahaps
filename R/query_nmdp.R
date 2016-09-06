@@ -12,26 +12,24 @@ query_nmdp <- function(ind) {
   
   ind <- dplyr::select(ind, -subject)
   
-  hap_found <-
+  haps_found <-
     ind %>% 
     split(seq_len(nrow(.))) %>%
-    lapply(. %>% filter_hap()) 
+    purrr::map_df(filter_hap) 
   
-  hap_not_found <- ind[sapply(hap_found, function(x) nrow(x) == 0), ]
-  
-  hap_found_df <- dplyr::bind_rows(hap_found) 
-  
-  ind <- ind[sapply(ind, function(x) !all(is.na(x)))]
+  haps_not_found <- 
+    dplyr::anti_join(ind, haps_found, by = c("A", "B", "C", "DRB1")) 
+
+  ind <- purrr::discard(ind, ~all(is.na(.))) 
   
   all_possible <-
     tidyr::expand_(ind, names(ind)) %>% 
     split(seq_len(nrow(.))) %>%
-    lapply(. %>% filter_hap()) %>%
-    dplyr::bind_rows() %>%
+    purrr::map_df(filter_hap) %>%
     dplyr::select(A, C, B, DRB1)
   
   list(`original haplotypes` = ind,
-       `haplotypes found` = hap_found_df,
-       `haplotypes not found` = hap_not_found,
+       `haplotypes found` = haps_found,
+       `haplotypes not found` = haps_not_found,
        `possible haplotypes` = all_possible)
 }
