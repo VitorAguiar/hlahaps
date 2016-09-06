@@ -29,7 +29,7 @@ library(hlahaps)
 ```
 
 ```{r echo=FALSE}
-devtools::load_all("~/hlahaps")
+devtools::load_all("/home/vitor/hlahaps")
 ```
 
 #### Usage
@@ -63,18 +63,18 @@ query_nmdp(test_ind)
 It is possible to apply `query_nmdp()` to the whole data, e.g. by using `plyr::dlply()` with a parallel backend provided by `doMC::registerDoMC()`:
 
 ```{r}
-# using 36 cores:
-doMC::registerDoMC(36)
+# using 16 cores:
+doMC::registerDoMC(16)
 
 results_list <- plyr::dlply(pag, ~subject, . %>% query_nmdp(), .parallel = TRUE)
 ```
 
-With a little hack using `purrr::transpose()` and `plyr::ldply()` it is possible to compile a data.frame with info for all individuals. For example, let's create a data.frame with all the haplotypes found in the NMDP table:
+Using `purrr::map_df()` it is possible to extract the info for all individuals as a data.frame. 
+For example, let's create a data.frame with all the haplotypes found in the NMDP table:
 
 ```{r}
-haps_found <-
-  purrr::transpose(results_list)$`haplotypes found` %>%
-  plyr::ldply(rbind, .id = "subject") %>%
+haps_found <- 
+  purrr::map_df(results_list, "haplotypes found", .id = "subject") %>%
   tibble::as_tibble()
 
 haps_found

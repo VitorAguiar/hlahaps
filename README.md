@@ -69,8 +69,10 @@ Applying `query_nmdp()`:
     #   NAM_rank <int>
 
     $`haplotypes not found`
-    # A tibble: 0 × 4
-    # ... with 4 variables: A <chr>, C <chr>, B <chr>, DRB1 <chr>
+    # A tibble: 1 × 4
+            A       C       B       DRB1
+        <chr>   <chr>   <chr>      <chr>
+    1 A*29:02 C*16:01 B*44:03 DRB1*07:01
 
     $`possible haplotypes`
     # A tibble: 14 × 4
@@ -104,26 +106,24 @@ It is possible to apply `query_nmdp()` to the whole data, e.g. by using
 `plyr::dlply()` with a parallel backend provided by
 `doMC::registerDoMC()`:
 
-    > # using 36 cores:
-    > doMC::registerDoMC(36)
+    > # using 16 cores:
+    > doMC::registerDoMC(16)
     > 
     > results_list <- plyr::dlply(pag, ~subject, . %>% query_nmdp(), .parallel = TRUE)
 
-With a little hack using `purrr::transpose()` and `plyr::ldply()` it is
-possible to compile a data.frame with info for all individuals. For
-example, let's create a data.frame with all the haplotypes found in the
-NMDP table:
+Using `purrr::map_df()` it is possible to extract the info for all
+individuals as a data.frame. For example, let's create a data.frame with
+all the haplotypes found in the NMDP table:
 
-    > haps_found <-
-    +   purrr::transpose(results_list)$`haplotypes found` %>%
-    +   plyr::ldply(rbind, .id = "subject") %>%
+    > haps_found <- 
+    +   purrr::map_df(results_list, "haplotypes found", .id = "subject") %>%
     +   tibble::as_tibble()
     > 
     > haps_found
 
     # A tibble: 25,017 × 15
        subject        A        C        B        DRB1     AFA_freq AFA_rank
-        <fctr>    <chr>    <chr>    <chr>       <chr>        <dbl>    <int>
+         <chr>    <chr>    <chr>    <chr>       <chr>        <dbl>    <int>
     1  HG00096 A*01:01g C*07:01g B*08:01g  DRB1*03:01 1.093801e-02        2
     2  HG00096 A*29:02g  C*16:01  B*44:03  DRB1*07:01 3.515995e-03       14
     3  HG00097 A*03:01g C*07:02g B*07:02g  DRB1*13:03 8.835382e-05     2047
