@@ -11,7 +11,7 @@ Depends:
 Imports:
     dplyr (>= 0.5.0),
     stringr (>= 1.1.0),
-    tibble(>= 1.2),
+    tibble (>= 1.2),
     tidyr (>= 0.5.1)
 Suggests:
     plyr (>= 1.8.4),
