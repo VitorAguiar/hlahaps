@@ -6,7 +6,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(message=FALSE, comment='', prompt = TRUE)
+knitr::opts_chunk$set(message = FALSE, comment = '', prompt = TRUE)
 ```
 
 #### Install
