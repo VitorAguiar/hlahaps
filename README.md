@@ -69,10 +69,8 @@ Applying `query_nmdp()`:
     #   NAM_rank <int>
 
     $`haplotypes not found`
-    # A tibble: 1 × 4
-            A       C       B       DRB1
-        <chr>   <chr>   <chr>      <chr>
-    1 A*29:02 C*16:01 B*44:03 DRB1*07:01
+    # A tibble: 0 × 4
+    # ... with 4 variables: A <chr>, C <chr>, B <chr>, DRB1 <chr>
 
     $`possible haplotypes`
     # A tibble: 14 × 4
@@ -121,7 +119,7 @@ all the haplotypes found in the NMDP table:
     > 
     > haps_found
 
-    # A tibble: 25,017 × 15
+    # A tibble: 1,352 × 15
        subject        A        C        B        DRB1     AFA_freq AFA_rank
          <chr>    <chr>    <chr>    <chr>       <chr>        <dbl>    <int>
     1  HG00096 A*01:01g C*07:01g B*08:01g  DRB1*03:01 1.093801e-02        2
@@ -134,6 +132,6 @@ all the haplotypes found in the NMDP table:
     8  HG00100 A*01:01g C*06:02g B*57:01g  DRB1*07:01 2.086870e-03       33
     9  HG00101  A*32:01 C*02:02g B*27:05g  DRB1*04:04 5.512488e-06    12841
     10 HG00101 A*11:01g C*06:02g B*57:01g  DRB1*15:01 0.000000e+00       NA
-    # ... with 25,007 more rows, and 8 more variables: API_freq <dbl>,
+    # ... with 1,342 more rows, and 8 more variables: API_freq <dbl>,
     #   API_rank <int>, CAU_freq <dbl>, CAU_rank <int>, HIS_freq <dbl>,
     #   HIS_rank <int>, NAM_freq <dbl>, NAM_rank <int>
