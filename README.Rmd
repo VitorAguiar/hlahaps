@@ -1,8 +1,6 @@
 ---
 title: "README"
-output: 
-    md_document:
-    variant: github_markdown
+output: github_document
 ---
 
 ```{r setup, include=FALSE}

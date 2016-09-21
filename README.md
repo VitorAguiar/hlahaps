@@ -1,24 +1,33 @@
+README
+================
+
 #### Install
 
 First, we need to install `devtools`, if not already installed.
 
-    > install.packages("devtools")
+``` r
+> install.packages("devtools")
+```
 
 Then, we install `hlahaps` using the `install_github()` function.
 
-    > devtools::install_github("VitorAguiar/hlahaps")
+``` r
+> devtools::install_github("VitorAguiar/hlahaps")
+```
 
-Now, we can load `hlahaps` as any other R package using the base
-function `library()`.
+Now, we can load `hlahaps` as any other R package using the base function `library()`.
 
-    > library(hlahaps)
+``` r
+> library(hlahaps)
+```
 
 #### Usage
 
-When we load the package, the [Gourraud et al. (2014)
-data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded.
+When we load the package, the [Gourraud et al. (2014) data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded.
 
-    > pag
+``` r
+> pag
+```
 
     # A tibble: 1,910 × 5
        subject        A        C        B       DRB1
@@ -35,11 +44,12 @@ data](http://dx.doi.org/10.1371/journal.pone.0097282) is loaded.
     10 HG00101 A*11:01g  C*06:02  B*57:01 DRB1*15:01
     # ... with 1,900 more rows
 
-We will use the individual HG00096 to demonstrate how the `query_nmdp()`
-function works:
+We will use the individual HG00096 to demonstrate how the `query_nmdp()` function works:
 
-    > test_ind <- dplyr::filter(pag, subject == "HG00096")
-    > test_ind
+``` r
+> test_ind <- dplyr::filter(pag, subject == "HG00096")
+> test_ind
+```
 
     # A tibble: 2 × 5
       subject        A        C        B       DRB1
@@ -49,7 +59,9 @@ function works:
 
 Applying `query_nmdp()`:
 
-    > query_nmdp(test_ind)
+``` r
+> query_nmdp(test_ind)
+```
 
     $`original haplotypes`
     # A tibble: 2 × 4
@@ -95,29 +107,27 @@ Applying `query_nmdp()`:
 
 1.  A data.frame with the original haplotypes
 2.  A data.frame with the haplotypes found at the `nmdp` table
-3.  A data.frame with the haplotypes which were not found at the `nmdp`
-    table
-4.  A data.frame with possible haplotypes at `nmdp` table given the
-    individual's alleles
+3.  A data.frame with the haplotypes which were not found at the `nmdp` table
+4.  A data.frame with possible haplotypes at `nmdp` table given the individual's alleles
 
-It is possible to apply `query_nmdp()` to the whole data, e.g. by using
-`plyr::dlply()` with a parallel backend provided by
-`doMC::registerDoMC()`:
+It is possible to apply `query_nmdp()` to the whole data, e.g. by using `plyr::dlply()` with a parallel backend provided by `doMC::registerDoMC()`:
 
-    > # using 16 cores:
-    > doMC::registerDoMC(16)
-    > 
-    > results_list <- plyr::dlply(pag, ~subject, . %>% query_nmdp(), .parallel = TRUE)
+``` r
+> # using 16 cores:
+> doMC::registerDoMC(16)
+> 
+> results_list <- plyr::dlply(pag, ~subject, . %>% query_nmdp(), .parallel = TRUE)
+```
 
-Using `purrr::map_df()` it is possible to extract the info for all
-individuals as a data.frame. For example, let's create a data.frame with
-all the haplotypes found in the NMDP table:
+Using `purrr::map_df()` it is possible to extract the info for all individuals as a data.frame. For example, let's create a data.frame with all the haplotypes found in the NMDP table:
 
-    > haps_found <- 
-    +   purrr::map_df(results_list, "haplotypes found", .id = "subject") %>%
-    +   tibble::as_tibble()
-    > 
-    > haps_found
+``` r
+> haps_found <- 
++   purrr::map_df(results_list, "haplotypes found", .id = "subject") %>%
++   tibble::as_tibble()
+> 
+> haps_found
+```
 
     # A tibble: 1,352 × 15
        subject        A        C        B        DRB1     AFA_freq AFA_rank
